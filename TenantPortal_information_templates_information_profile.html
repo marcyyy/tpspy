@@ -1,0 +1,617 @@
+<html lang="en">
+<head >
+    {% load static %}
+    <link href="{% static 'information/dashboard.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/album.css' %}" rel="stylesheet" type="text/css">
+    <script src="{% static 'js/dashboard.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/bootstrap.js' %}" type="text/javascript"></script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Home</title>
+
+    <link rel = "icon" href ="{% static 'images/tps_icon.png' %}" type = "image/x-icon">
+</head>
+<body class="text-center">
+
+<div class="pos-f-t" style="height:auto;">
+  <div class="collapse" id="navbarToggleExternalContent">
+    <div class="bg-dark p-4">
+      <h5 class="text-white h4">Hello {{ user.first_name }} {{ user.last_name }} of {{user.tenant.unit}}</h5>
+      <span class="text-muted">Welcome to your Tenant Portal</span><p>
+      <span class="text-muted">For inquiries or concerns,</span>
+        <a href="{% url 'complaints'%}">Click here so we can hear you out.</a></p>
+    </div>
+  </div>
+  <nav class="navbar navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+              <div class="btn-group dropleft" style="margin-left:1305px;margin-top:3px" >
+            <button type="button" class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <img src="{% static 'images/bell.png' %}"  width="25" height="25" class="d-inline-block align-top" alt="">
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" style=" overflow:auto;height:500" >
+              <p style="font-weight:bold;margin:10px 20px">Notifications</p><hr>
+              {% for i in notif %}
+              {% if i.content_type.model == bill_include %}
+              <a class="dropdown-item" type="button">Billings: {{ i.object_repr }}</a>
+              <h6 class="dropdown-header" style="margin-top:-10px; font-size:13px">{{ i.action_time.date }}</h6><hr>
+              {% elif i.content_type.model == visit_include %}
+              <a class="dropdown-item" type="button">Visitor Request: {{ i.object_repr }}</a>
+              <h6 class="dropdown-header" style="margin-top:-10px; font-size:13px">{{ i.action_time.date }}</h6><hr>
+              {% endif%}
+              {% endfor %}
+              </div>
+          </div>
+    <ul class="navbar-nav px-3">
+    <li class="nav-item text-nowrap">
+      <a class="nav-link" href="{% url 'logout' %}">
+      <img src="{% static 'images/out.png' %}"  width="25" height="25" class="d-inline-block align-top" alt="{% url 'logout' %}">
+      </a>
+    </li>
+  </ul>
+  </nav>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav class="col-md-2 d-none d-md-block bg-light sidebar" style="margin-top:0px">
+      <div class="sidebar-sticky" style="margin-top:-30px">
+            <img src="{% static 'images/tps_icon.jpg' %}"  width="190" height="91" class="d-inline-block align-top" alt="">
+        <div class="list-group" >
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="home"></span>
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'profile' %}">
+              <span data-feather="home"></span>
+              Home <span class="sr-only">(current)</span>
+            </a>
+          </li><li class="nav-item">
+            <a class="nav-link" href="{% url 'billings'%}">
+              <span data-feather="file"></span>
+              Billings
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'complaints'%}">
+              <span data-feather="shopping-cart"></span>
+              Complaints
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'visitors'%}">
+              <span data-feather="users"></span>
+              Visitor Request
+            </a>
+          </li>
+          <li class="nav-item">
+            <li class="nav-item">
+            <a class="nav-link" href="{% url 'settings' %}">
+              <span data-feather="shopping-cart"></span>
+              Account Settings
+            </a>
+          </li>
+          {% if user.is_superuser %}
+          <li class="nav-item">
+           <a class="nav-link" href="{% url 'analytics' %}">
+              <span data-feather="users"></span>
+              TPS Data Analytics
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin:index' %}">
+              <span data-feather="bar-chart-2"></span>
+              Admin Dashboard
+            </a>
+          </li>
+          {% else %}
+          {% endif %}
+        </ul>
+
+          <hr>
+          <hr>
+
+        </div>
+      </div>
+    </nav>
+    <!------------------------------------------------========= STARTS HERE ADMIN ======------------------------------------------------------------>
+    {% if user.is_superuser %}
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert" >
+          {{message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endfor %}
+  <main role="main">
+
+  <section class="jumbotron text-center" style="margin-top:-70px">
+    <div class="container">
+      <h1>Hello {{ user.first_name }} {{ user.last_name }}</h1>
+      <p class="lead text-muted"> Welcome to your Admin & Tenant Portal</p>
+      <p class="lead text-muted" style="margin-top:-20px"> Below describes all the feature an admin level can do.</p>
+    </div>
+  </section>
+
+<div class="album py-5 bg-light">
+    <div class="container">
+
+      <div class="row">
+
+        <div class="col-md-4">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <p class="card-text" style="margin:10px">Register, Log in and Log out</p>
+              <p class="card-text" style="margin-top:-10px">from Tenant Portal</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'register' %}">Register</a></button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'login' %}">Log In</a></button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'logout' %}">
+                      <img src="{% static 'images/out_b.png' %}"  width="20" height="20" class="d-inline-block align-top" alt="">
+                    </a> </button>
+                </div><h6 class="text-muted" style="margin-right:3px">Tenant Level</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <p class="card-text"> Check Notifications
+                <h6 class="text-muted" style="margin-top:-15px">get updates about your visitor requests,
+              new billings due, and if the payments are successful</h6></p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <img src="{% static 'images/bell_b.png' %}"  width="20" height="20" class="d-inline-block align-top" alt="">
+                  &nbspNotification Bell </button>
+                </div><h6 class="text-muted" style="margin-right:3px">Tenant Level</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+         <div class="col-md-4">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <p class="card-text">View List of Billings</p>
+              <h6 class="text-muted" style="margin-top:-15px">due and paid history</h6>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group" style="margin-top:10px">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'billings' %}">Due</a></button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'billings_p' %}">Paid</a></button>
+                </div><h6 class="text-muted" style="margin-right:3px">Tenant Level</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <p class="card-text">Submit a Complaint & View Logs of Submissions</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group" style="margin-top:10px">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'complaints' %}">Submit</a></button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'complaints_h' %}">Log</a></button>
+                </div><h6 class="text-muted" style="margin-right:3px">Tenant Level</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <p class="card-text">Submit a Visitor Request & View Logs of Submissions</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group" style="margin-top:10px">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'visitors' %}">Submit</a></button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'visitors_h' %}">Log</a></button>
+                </div><h6 class="text-muted" style="margin-right:3px">Tenant Level</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <p class="card-text">Update Account Information & Change Password</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group" style="margin-top:10px">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'settings' %}">Update</a></button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'settings_pass' %}">Change Pass</a></button>
+                </div><h6 class="text-muted" style="margin-right:3px">Tenant Level</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="width:100%;margin:auto" >
+        <div class="col-md-6">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <p class="card-text">Process of Billings</p>
+              <h6 class="text-muted" style="margin-top:-15px">create, read, update & delete tenant bills</h6>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group" style="margin-top:10px">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'admin:information_billing_changelist'%}">Database</a></button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'billings' %}">Due</a></button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'billings_p' %}">Paid</a></button>
+                </div><h6 class="text-muted" style="margin-right:3px">Admin Level</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <p class="card-text">Process of Visitor Requests</p>
+              <h6 class="text-muted" style="margin-top:-15px">create, read, update & delete visitor requests</h6>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group" style="margin-top:10px">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'admin:information_visitor_changelist'%}">Database</a></button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'billings' %}">Due</a></button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'billings_p' %}">Paid</a></button>
+                </div><h6 class="text-muted" style="margin-right:3px">Admin Level</h6>
+              </div>
+            </div>
+          </div>
+        </div></div>
+
+        <div class="row" style="width:100%;margin:auto">
+        <div class="col-md-6">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body" >
+              <p class="card-text">Access Tenant Portal System Report</p>
+              <h6 class="text-muted" style="margin-top:-15px">summary, total count, percentage,
+                      graph representation and conclusion in accord to data analytics
+                      of each database models </h6>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group" style="margin-top:10px">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'analytics' %}">Redirect</a></button>
+                </div><h6 class="text-muted" style="margin-right:3px">Admin Level</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <p class="card-text">Access Tenant Portal Admin Dashboard</p>
+              <h6 class="text-muted" style="margin-top:-15px">create, read, update & delete database records.
+                view all history logs and recent admin actions</h6>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group" style="margin-top:10px">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'admin:index' %}">Redirect</a></button>
+                </div><h6 class="text-muted" style="margin-right:3px">Admin Level</h6>
+              </div>
+            </div>
+          </div>
+        </div></div>
+
+
+      <div class="col-md-13" style="width:97%;margin:auto">
+      <div class="card mb-3 shadow-sm">
+          <div class="row">
+          <div class="card-body" style="text-align:left; margin-left:30px; margin-right:30px">
+            <h5 class="card-title" style="font-weight:bold">Tenant Portal</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Python System and Data Analytics Project for Integrative Programming</h6><hr>
+
+              <div class="row">
+                  <div class="col-md-4" style="text-align:center">
+                   <h5 class="card-title" style="color:#00a8ff;font-weight:bold">Languages</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">programming languages</h6><hr>
+                      <ul class="nav flex-column" style="margin-left:20px;margin-right:20px;text-align:center">
+                      <li class="nav-item" style="margin:5px"> Python </li>
+                        <li class="nav-item" style="margin:5px"> Web Dev </li>
+                        <h6 class="card-subtitle mb-2 text-muted" style="font-size:15px">
+                          HTML, CSS, JS</h6>
+                        <li class="nav-item" style="margin:5px"> SQL </li>
+                        <h6 class="card-subtitle mb-2 text-muted" style="font-size:15px">
+                          database</h6>
+                      </ul>
+          </div>
+
+                 <div class="col-md-4" style="text-align:center">
+                   <h5 class="card-title" style="color:#00a8ff;font-weight:bold">Development</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">sources, packages and applications</h6><hr>
+                      <ul class="nav flex-column" style="margin-left:20px;margin-right:20px;text-align:center">
+                      <li class="nav-item" style="margin:5px"> Pycharm 2019.3.3 </li>
+                        <li class="nav-item" style="margin:5px"> DB Browser SQLite </li>
+                        <li class="nav-item" style="margin:5px"> Django 3.0.5 </li>
+                        <h6 class="card-subtitle mb-2 text-muted" style="font-size:15px">
+                           pip install Django </h6>
+                        <li class="nav-item" style="margin:5px">Bootstrap 4.4.1 </li>
+                        <h6 class="card-subtitle mb-2 text-muted" style="font-size:15px">
+                          pip install django-bootstrap4</h6>
+                        <li class="nav-item" style="margin:5px">Chart.js 2.0.0 </li>
+                        <h6 class="card-subtitle mb-2 text-muted" style="font-size:15px">
+                          pip install django-chartjs</h6>
+                      </ul>
+          </div>
+
+             <div class="col-md-4" style="text-align:center">
+                   <h5 class="card-title" style="color:#00a8ff;font-weight:bold">Developers</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">behind the system</h6><hr>
+                      <ul class="nav flex-column" style="margin-left:20px;margin-right:20px;text-align:center">
+                        <li class="nav-item" style="margin:5px"> Zyrah Kae Avila </li>
+                        <h6 class="card-subtitle mb-2 text-muted" style="font-size:15px">
+                           BSIT 2-1N </h6>
+                        <li class="nav-item" style="margin:5px"> Raven Nicolas </li>
+                        <h6 class="card-subtitle mb-2 text-muted" style="font-size:15px">
+                          BSIT 2-1N</h6>
+                        <li class="nav-item" style="margin:5px"> Marielle Veneracion </li>
+                        <h6 class="card-subtitle mb-2 text-muted" style="font-size:15px">
+                          BSIT 2-1N</h6>
+                      </ul>
+          </div>
+
+              </div>
+          </div>
+          </div>
+      </div>
+      </div>
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+</main>
+
+
+
+  </main>
+
+ <!------------------------------------------------========= ENDS HERE ADMIN ======------------------------------------------------------------>
+<!------------------------------------------------========= STARTS HERE TENANT ======------------------------------------------------------------>
+    {% else %}
+
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert" >
+          {{message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endfor %}
+        <main role="main">
+
+  <section class="jumbotron text-center" style="margin-top:-70px">
+    <div class="container">
+      <h1>Hello {{ user.first_name }} {{ user.last_name }}</h1>
+      <p class="lead text-muted"> Welcome to your Tenant Portal</p>
+      <p class="lead text-muted" style="margin-top:-20px"> Below describes all the feature a tenant level can do.</p>
+    </div>
+  </section>
+
+  <div class="album py-5 bg-light">
+    <div class="container">
+
+      <div class="row">
+
+        <div class="col-md-4">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <p class="card-text" style="margin:10px">Register, Log in and Log out</p>
+              <p class="card-text" style="margin-top:-10px">from Tenant Portal</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'register' %}">Register</a></button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'login' %}">Log In</a></button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'logout' %}">
+                      <img src="{% static 'images/out_b.png' %}"  width="20" height="20" class="d-inline-block align-top" alt="">
+                    </a> </button>
+                </div><h6 class="text-muted" style="margin-right:3px">Tenant Level</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <p class="card-text"> Check Notifications
+                <h6 class="text-muted" style="margin-top:-15px">get updates about your visitor requests,
+              new billings due, and if the payments are successful</h6></p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <img src="{% static 'images/bell_b.png' %}"  width="20" height="20" class="d-inline-block align-top" alt="">
+                  &nbspNotification Bell </button>
+                </div><h6 class="text-muted" style="margin-right:3px">Tenant Level</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+         <div class="col-md-4">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <p class="card-text">View List of Billings</p>
+              <h6 class="text-muted" style="margin-top:-15px">due and paid history</h6>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group" style="margin-top:10px">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'billings' %}">Due</a></button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'billings_p' %}">Paid</a></button>
+                </div><h6 class="text-muted" style="margin-right:3px">Tenant Level</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <p class="card-text">Submit a Complaint & View Logs of Submissions</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group" style="margin-top:10px">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'complaints' %}">Submit</a></button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'complaints_h' %}">Log</a></button>
+                </div><h6 class="text-muted" style="margin-right:3px">Tenant Level</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <p class="card-text">Submit a Visitor Request & View Logs of Submissions</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group" style="margin-top:10px">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'visitors' %}">Submit</a></button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'visitors_h' %}">Log</a></button>
+                </div><h6 class="text-muted" style="margin-right:3px">Tenant Level</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <p class="card-text">Update Account Information & Change Password</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group" style="margin-top:10px">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'settings' %}">Update</a></button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'settings_pass' %}">Change Pass</a></button>
+                </div><h6 class="text-muted" style="margin-right:3px">Tenant Level</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <div class="col-md-13" style="width:97%;margin:auto">
+      <div class="card mb-3 shadow-sm">
+          <div class="row">
+          <div class="card-body" style="text-align:left; margin-left:30px; margin-right:30px">
+            <h5 class="card-title" style="font-weight:bold">Tenant Portal</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Python System and Data Analytics Project for Integrative Programming</h6><hr>
+
+              <div class="row">
+                  <div class="col-md-4" style="text-align:center">
+                   <h5 class="card-title" style="color:#00a8ff;font-weight:bold">Languages</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">programming languages</h6><hr>
+                      <ul class="nav flex-column" style="margin-left:20px;margin-right:20px;text-align:center">
+                      <li class="nav-item" style="margin:5px"> Python </li>
+                        <li class="nav-item" style="margin:5px"> Web Dev </li>
+                        <h6 class="card-subtitle mb-2 text-muted" style="font-size:15px">
+                          HTML, CSS, JS</h6>
+                        <li class="nav-item" style="margin:5px"> SQL </li>
+                        <h6 class="card-subtitle mb-2 text-muted" style="font-size:15px">
+                          database</h6>
+                      </ul>
+          </div>
+
+                 <div class="col-md-4" style="text-align:center">
+                   <h5 class="card-title" style="color:#00a8ff;font-weight:bold">Development</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">sources, packages and applications</h6><hr>
+                      <ul class="nav flex-column" style="margin-left:20px;margin-right:20px;text-align:center">
+                      <li class="nav-item" style="margin:5px"> Pycharm 2019.3.3 </li>
+                        <li class="nav-item" style="margin:5px"> DB Browser SQLite </li>
+                        <li class="nav-item" style="margin:5px"> Django 3.0.5 </li>
+                        <h6 class="card-subtitle mb-2 text-muted" style="font-size:15px">
+                           pip install Django </h6>
+                        <li class="nav-item" style="margin:5px">Bootstrap 4.4.1 </li>
+                        <h6 class="card-subtitle mb-2 text-muted" style="font-size:15px">
+                          pip install django-bootstrap4</h6>
+                        <li class="nav-item" style="margin:5px">Chart.js 2.0.0 </li>
+                        <h6 class="card-subtitle mb-2 text-muted" style="font-size:15px">
+                          pip install django-chartjs</h6>
+                      </ul>
+          </div>
+
+             <div class="col-md-4" style="text-align:center">
+                   <h5 class="card-title" style="color:#00a8ff;font-weight:bold">Developers</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">behind the system</h6><hr>
+                      <ul class="nav flex-column" style="margin-left:20px;margin-right:20px;text-align:center">
+                        <li class="nav-item" style="margin:5px"> Zyrah Kae Avila </li>
+                        <h6 class="card-subtitle mb-2 text-muted" style="font-size:15px">
+                           BSIT 2-1N </h6>
+                        <li class="nav-item" style="margin:5px"> Raven Nicolas </li>
+                        <h6 class="card-subtitle mb-2 text-muted" style="font-size:15px">
+                          BSIT 2-1N</h6>
+                        <li class="nav-item" style="margin:5px"> Marielle Veneracion </li>
+                        <h6 class="card-subtitle mb-2 text-muted" style="font-size:15px">
+                          BSIT 2-1N</h6>
+                      </ul>
+          </div>
+
+              </div>
+          </div>
+          </div>
+      </div>
+      </div>
+
+
+
+
+
+
+
+    </div>
+  </div>
+</main>
+
+ <!------------------------------------------------========= ENDS HERE TENANT ======------------------------------------------------------------>
+  </main>
+
+    {% endif %}
+
+
+  </div>
+</div>
+</body>
+</html>
+

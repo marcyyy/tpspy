@@ -1,0 +1,53 @@
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'information/signin.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'information/style.css' %}" type="text/css">
+    <title>Registration</title>
+</head>
+<body class="text-center" style="margin-left:200px;margin-top:70px">
+
+<form method="POST" class=" mx-auto col-lg-8" >
+
+    <div class="d-flex justify-content-center align-items-center pt-3 mb-3" >
+        <img  src="{% static 'images/tps_icon_b.png' %}" alt="" width="150" height="71" style="margin-left:-310px" >
+        <h1 class="h3 font-weight-normal" style="margin-right:-135px;margin-left:180px">Register Account</h1></div>
+        <div class="row" style="width:80%">
+
+        <hr style="width:100%">
+    {% csrf_token %}
+<div class="col-md-6">
+      <div class="card mb-6 shadow-sm">
+          <div class="card-body" style="text-align:center;">
+            <h5 class="card-title">Tenant Portal Account</h5><hr>
+{% for field in form %}
+    <div class="form-group">
+        <div class="form-group">
+            {{field.label}}</div>
+            <div class="form-group">
+                {{field}}</div>
+    </div>
+              {% endfor %}</div></div></div>
+
+              <div class="col-md-6">
+      <div class="card mb-6 shadow-sm">
+          <div class="card-body" style="text-align:center;">
+            <h5 class="card-title">Tenant Information</h5><hr>
+    {% for field in tenant_form %}
+    <div class="form-group">
+        <div class="form-group">
+            {{field.label}}</div>
+            <div class="form-group">
+                {{field}}</div>
+    </div>
+          {% endfor %}</div></div>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit" name="button" style="width:50%;margin:40px 70px -20px">Confirm</button>
+                  <p class="mt-5 mb-3 text-muted">Python System & Data Analytics Project BSIT2-1N</p>
+              </div>
+     </div>
+</form>
+</body>
+</html>
+

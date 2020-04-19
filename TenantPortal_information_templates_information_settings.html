@@ -1,0 +1,191 @@
+<html lang="en">
+<head >
+    {% load static %}
+    <link href="{% static 'information/dashboard.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css">
+    <script src="{% static 'js/dashboard.js' %}" type="text/javascript"></script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Account</title>
+
+    <link rel = "icon" href ="{% static 'images/tps_icon.png' %}" type = "image/x-icon">
+</head>
+<body class="text-center">
+
+<div class="pos-f-t" style="height:auto;">
+  <div class="collapse" id="navbarToggleExternalContent">
+    <div class="bg-dark p-4">
+      <h5 class="text-white h4">Hello {{ user.first_name }} {{ user.last_name }} of {{user.tenant.unit}}</h5>
+      <span class="text-muted">Welcome to your Tenant Portal</span><p>
+      <span class="text-muted">For inquiries or concerns,</span>
+        <a href="{% url 'complaints'%}">Click here so we can hear you out.</a></p>
+    </div>
+  </div>
+  <nav class="navbar navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+              <div class="btn-group dropleft" style="margin-left:1305px;margin-top:3px">
+            <button type="button" class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <img src="{% static 'images/bell.png' %}"  width="25" height="25" class="d-inline-block align-top" alt="">
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" style=" overflow:auto;height:500">
+              <p style="font-weight:bold;margin:10px 20px">Notifications</p><hr>
+              {% for i in notif %}
+              {% if i.content_type.model == bill_include %}
+              <a class="dropdown-item" type="button">Billings: {{ i.object_repr }}</a>
+              <h6 class="dropdown-header" style="margin-top:-10px; font-size:13px">{{ i.action_time.date }}</h6><hr>
+              {% elif i.content_type.model == visit_include %}
+              <a class="dropdown-item" type="button">Visitor Request: {{ i.object_repr }}</a>
+              <h6 class="dropdown-header" style="margin-top:-10px; font-size:13px">{{ i.action_time.date }}</h6><hr>
+              {% endif%}
+              {% endfor %}
+              </div>
+          </div>
+    <ul class="navbar-nav px-3">
+    <li class="nav-item text-nowrap">
+      <a class="nav-link" href="{% url 'logout' %}">
+      <img src="{% static 'images/out.png' %}"  width="25" height="25" class="d-inline-block align-top" alt="{% url 'logout' %}">
+      </a>
+    </li>
+  </ul>
+  </nav>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav class="col-md-2 d-none d-md-block bg-light sidebar" style="margin-top:0px">
+      <div class="sidebar-sticky" style="margin-top:-30px">
+        <img src="{% static 'images/tps_icon.jpg' %}"  width="190" height="91" class="d-inline-block align-top" alt="">
+        <div class="list-group" >
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="home"></span>
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'profile' %}">
+              <span data-feather="home"></span>
+              Home
+            </a>
+          </li><li class="nav-item">
+            <a class="nav-link" href="{% url 'billings'%}">
+              <span data-feather="file"></span>
+              Billings
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'complaints'%}">
+              <span data-feather="shopping-cart"></span>
+              Complaints
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'visitors'%}">
+              <span data-feather="users"></span>
+              Visitor Request
+            </a>
+          </li>
+          <li class="nav-item">
+            <li class="nav-item">
+            <a class="nav-link active" href="{% url 'settings' %}">
+              <span data-feather="shopping-cart"></span>
+              Account Settings
+            </a>
+          </li>
+          {% if request.user.is_superuser %}
+          <li class="nav-item">
+           <a class="nav-link" href="{% url 'analytics'%}">
+              <span data-feather="users"></span>
+              TPS Data Analytics
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin:index' %}">
+              <span data-feather="bar-chart-2"></span>
+              Admin Dashboard
+            </a>
+          </li>
+          {% else %}
+          {% endif %}
+        </ul>
+
+        </div>
+      </div>
+    </nav>
+
+  <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom" style="margin-top:-50px">
+
+        <h1 class="h2">Account Settings</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+          <div class="btn-group mr-2">
+            <ul class="nav nav-pills card-header-pills">
+      <li class="nav-item">
+        <a class="nav-link active" href="#">Information</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'settings_pass' %}">Password</a>
+      </li>
+    </ul>
+          </div>
+        </div>
+    </div>
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert" >
+          {{message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endfor %}
+      <h4 class="mb-3">Update Information</h4>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label>Username</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">@</span>
+            </div>
+            <input type="text" class="form-control" name="username" value="{{user}}" required>
+            <div class="invalid-feedback" style="width: 100%;">
+              Your username is required.
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label>First name <span class="text-muted"> (Optional)</span></label>
+            <input type="text" class="form-control" name="first_name" value="{{first_name}}" >
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Last name<span class="text-muted"> (Optional)</span></label>
+            <input type="text" class="form-control" name="last_name" value="{{last_name}}">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label >Email</label>
+          <input type="email" class="form-control" name="email" value="{{email}}">
+          <div class="invalid-feedback">
+            Please enter a valid email address for shipping updates.
+          </div>
+        </div>
+        <hr>
+        <button class="btn btn-primary btn-lg btn-block" style="width:50%; margin: auto;" type="submit">Update</button>
+      </form>
+  </main>
+
+
+  </div>
+</div>
+</body>
+</html>
+

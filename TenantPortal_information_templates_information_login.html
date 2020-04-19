@@ -1,0 +1,45 @@
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'information/signin.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" type="text/css">
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Log In</title>
+</head>
+<body class="text-center" style="background-color: #f0f0f0;">
+<form  method="POST" class="form-signin" action="">
+    {% csrf_token %}
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+          {{message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endfor %}
+
+<img class="mb-4" src="{% static 'images/tps_icon_b.png' %}" alt="" width="150" height="71">
+  <h1 class="h3 mb-3 font-weight-normal">Account Login</h1>
+    <hr>
+    <label class="sr-only">Username</label>
+  <input type="text" name="username" class="form-control" placeholder="Username" required autofocus>
+  <label class="sr-only">Password</label>
+  <input type="password" name="password" class="form-control" placeholder="Password" required>
+  <div class="checkbox mb-3"><hr>
+    <label>
+      <input type="checkbox" value="remember-me"> Remember me
+    </label>
+  </div>
+    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Login">
+  <a class="btn btn-lg btn-secondary btn-block" style="background-color:#aeaeae;color:black" href="../register">Register</a>
+  <p class="mt-5 mb-3 text-muted">Python System and Data Analytics Project</p>
+</form>
+</body>
+</html>
+
